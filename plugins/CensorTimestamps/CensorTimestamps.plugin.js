@@ -1,6 +1,8 @@
 /**
  * @name CensorTimestamps
  * @authorLink https://github.com/BlueCannonBall
+ * @updateUrl https://raw.githubusercontent.com/BlueCannonBall/BetterDiscordStuff/main/plugins/CensorTimestamps/CensorTimestamps.plugin.js
+ * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/CensorTimestamps
  */
 
 function censorTimestamps () {
@@ -32,7 +34,7 @@ module.exports = (() =>
                 }
             ],
             version: "0.1.0",
-            description: "Censors all timestamps unless hovered over",
+            description: "Censors all timestamps unless hovered over.",
         }
     };
 
