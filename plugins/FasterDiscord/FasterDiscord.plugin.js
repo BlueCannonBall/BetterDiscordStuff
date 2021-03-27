@@ -9,10 +9,12 @@ var emptyFunction = function () { };
 
 function antiSlowEvent () {
     document.onmouseover = emptyFunction;
+    document.onpointerover = emptyFunction;
     let all = document.body.getElementsByTagName("*");
 
     for (var i=0, max=all.length; i < max; i++) {
         all[i].onmouseover = emptyFunction;
+        all[i].onpointerover = emptyFunction;
     }
 }
 
@@ -31,7 +33,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.2.2",
+            version: "2.0.0",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -93,11 +95,11 @@ module.exports = (() =>
                     console.debug = emptyFunction;
                     this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
                     window.addEventListener = (...args) => {
-                        if (args[0] != 'mouseover') this.badAddEventListener.bind(window)(...args);
+                        if (args[0] != 'mouseover' && args[0] != 'pointerover') this.badAddEventListener.bind(window)(...args);
                     };
 
                     document.addEventListener = (...args) => {
-                        if (args[0] != 'mouseover') this.badAddEventListenerDocument.bind(document)(...args);
+                        if (args[0] != 'mouseover' && args[0] != 'pointerover') this.badAddEventListenerDocument.bind(document)(...args);
                     };
                 }
 
