@@ -6,6 +6,7 @@
  */
 
 var emptyFunction = function () { };
+window._uuid = 0;
 
 function antiSlowEvent () {
     document.onmouseover = emptyFunction;
@@ -15,6 +16,22 @@ function antiSlowEvent () {
     for (var i=0, max=all.length; i < max; i++) {
         all[i].onmouseover = emptyFunction;
         all[i].onpointerover = emptyFunction;
+    }
+}
+
+function timeoutLoop () {
+    let removedTimeouts = [];
+    for (let timeout in ongoingTimeouts) {
+        if (ongoingTimeouts[timeout])
+        {
+            if (Date.now() >= ongoingTimeouts[timeout].time) {
+                ongoingTimeouts[timeout].func(ongoingTimeouts[timeout].args);
+                removedTimeouts.push(timeout);
+            }
+        }
+    }
+    for (let timeout in removedTimeouts) {
+        delete ongoingTimeouts[removedTimeouts[timeout]];
     }
 }
 
@@ -33,7 +50,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "2.0.0",
+            version: "2.1.0",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -81,8 +98,12 @@ module.exports = (() =>
                     this.consoleError = console.error;
                     this.consoleDebug = console.debug;
                     this.antiSlowEventInterval = null;
+                    this.timeoutLoopInterval = null;
                     this.badAddEventListener = window.addEventListener;
                     this.badAddEventListenerDocument = document.addEventListener;
+                    this.slowTimeout = window.setTimeout;
+                    this.clearTimeout = window.clearTimeout;
+                    window.ongoingTimeouts = {};
                 }
 
                 onStart()
@@ -94,6 +115,25 @@ module.exports = (() =>
                     console.error = emptyFunction;
                     console.debug = emptyFunction;
                     this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
+                    this.timeoutLoopInterval = setInterval(timeoutLoop, 1000/60);
+                    window.setTimeout = (func, time, ...args) => {
+                        let id = window._uuid++;
+                        if (time < 0) {
+                            func(...args);
+                            return id;
+                        }
+                        window.ongoingTimeouts[id] = {
+                            func,
+                            time: Date.now() + time,
+                            args
+                        };
+                        return id;
+                    };
+                    window.clearTimeout = (timeout) => {
+                        if (window.ongoingTimeouts[timeout]) {
+                            delete window.ongoingTimeouts[timeout];
+                        }
+                    };
                     window.addEventListener = (...args) => {
                         if (args[0] != 'mouseover' && args[0] != 'pointerover') this.badAddEventListener.bind(window)(...args);
                     };
@@ -110,7 +150,10 @@ module.exports = (() =>
                     console.warn = this.consoleWarn;
                     console.error = this.consoleError;
                     console.debug = this.consoleDebug;
+                    window.setTimeout = this.slowTimeout;
+                    window.clearTimeout = this.clearTimeout;
                     clearInterval(this.antiSlowEventInterval);
+                    clearInterval(this.timeoutLoopInterval);
                     window.addEventListener = this.badAddEventListener;
                     document.addEventListener = this.badAddEventListenerDocument;
                 }
