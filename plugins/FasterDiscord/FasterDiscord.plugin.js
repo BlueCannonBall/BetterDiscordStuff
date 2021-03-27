@@ -56,7 +56,7 @@ module.exports = (() =>
         const plugin = (Plugin, Api) =>
         {
 
-            return class AvatarIconViewer extends Plugin
+            return class FasterDiscord extends Plugin
             {
                 constructor()
                 {
@@ -72,6 +72,7 @@ module.exports = (() =>
                         this.getVersion(),
                         "https://raw.githubusercontent.com/BlueCannonBall/BetterDiscordStuff/main/plugins/FasterDiscord/FasterDiscord.plugin.js"
                     );
+
                     console.log = this.fastConsoleLog;
                 }
 

@@ -99,7 +99,7 @@ module.exports = (() =>
                 SimpleMarkdown
             } = DiscordModules;
 
-            return class AvatarIconViewer extends Plugin
+            return class CensorTimestamps extends Plugin
             {
                 constructor()
                 {
