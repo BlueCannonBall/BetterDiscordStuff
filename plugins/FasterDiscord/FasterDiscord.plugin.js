@@ -20,7 +20,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.0.0",
+            version: "1.1.0",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -62,17 +62,31 @@ module.exports = (() =>
                 {
                     super();
                     this.slowConsoleLog = console.log;
+                    this.slowConsoleInfo = console.info;
+                    this.slowConsoleWarn = console.warn;
+                    this.slowConsoleError = console.error;
+                    this.slowConsoleDebug = console.debug;
+
                     this.fastConsoleLog = function (...args) { };
                 }
 
                 onStart()
                 {
+                    console.clear()
                     console.log = this.fastConsoleLog;
+                    console.info = this.fastConsoleLog;
+                    console.warn = this.fastConsoleLog;
+                    console.error = this.fastConsoleLog;
+                    console.debug = this.fastConsoleLog;
                 }
 
                 onStop()
                 {
                     console.log = this.slowConsoleLog;
+                    console.info = this.slowConsoleInfo;
+                    console.warn = this.slowConsoleWarn;
+                    console.error = this.slowConsoleError;
+                    console.debug = this.slowConsoleDebug;
                 }
             }
         };
