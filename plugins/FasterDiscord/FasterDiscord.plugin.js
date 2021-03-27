@@ -5,14 +5,16 @@
  * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/FasterDiscord
  */
 
-var emptyFunction = function (...args) { };
+var emptyFunction = function () { };
 
 function antiSlowEvent () {
     document.onmouseover = emptyFunction;
+    document.onpointerover = emptyFunction;
     let all = document.body.getElementsByTagName("*");
 
     for (var i=0, max=all.length; i < max; i++) {
         all[i].onmouseover = emptyFunction;
+        all[i].onpointerover = emptyFunction;
     }
 }
 
@@ -79,6 +81,8 @@ module.exports = (() =>
                     this.consoleError = console.error;
                     this.consoleDebug = console.debug;
                     this.antiSlowEventInterval = null;
+                    this.badAddEventListener = window.addEventListener;
+                    this.badAddEventListenerDocument = document.addEventListener;
                 }
 
                 onStart()
@@ -90,6 +94,13 @@ module.exports = (() =>
                     console.error = emptyFunction;
                     console.debug = emptyFunction;
                     this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
+                    window.addEventListener = (...args) => {
+                        if (args[0] != 'mouseover' && args[0] != 'pointerover') this.badAddEventListener.bind(window)(...args);
+                    };
+
+                    document.addEventListener = (...args) => {
+                        if (args[0] != 'mouseover' && args[0] != 'pointerover') this.badAddEventListenerDocument.bind(document)(...args);
+                    };
                 }
 
                 onStop()
@@ -100,6 +111,8 @@ module.exports = (() =>
                     console.error = this.consoleError;
                     console.debug = this.consoleDebug;
                     clearInterval(this.antiSlowEventInterval);
+                    window.addEventListener = this.badAddEventListener;
+                    document.addEventListener = this.badAddEventListenerDocument;
                 }
             }
         };
