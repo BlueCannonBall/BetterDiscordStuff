@@ -86,11 +86,6 @@ module.exports = (() =>
                 {
                     clearInterval(this.interval);
                 }
-
-                // onMessage()
-                // {
-                //     censorTimestamps();
-                // }
             }
         };
 
