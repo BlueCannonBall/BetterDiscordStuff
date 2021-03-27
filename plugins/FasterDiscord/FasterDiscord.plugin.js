@@ -5,9 +5,11 @@
  * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/FasterDiscord
  */
 
+var emptyFunction = function (...args) { };
+
 function antiSlowEvent () {
     document.body.querySelectorAll('*').forEach(function(node) {
-        node.onmouseover = function (...args) { };
+        node.onmouseover = emptyFunction;
     });
 }
 
@@ -26,7 +28,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.1.1",
+            version: "1.1.2",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -67,33 +69,32 @@ module.exports = (() =>
                 constructor()
                 {
                     super();
-                    this.slowConsoleLog = console.log;
-                    this.slowConsoleInfo = console.info;
-                    this.slowConsoleWarn = console.warn;
-                    this.slowConsoleError = console.error;
-                    this.slowConsoleDebug = console.debug;
-                    this.fastConsoleLog = function (...args) { };
+                    this.consoleLog = console.log;
+                    this.consoleInfo = console.info;
+                    this.consoleWarn = console.warn;
+                    this.consoleError = console.error;
+                    this.consoleDebug = console.debug;
                     this.antiSlowEventInterval = null;
                 }
 
                 onStart()
                 {
                     console.clear()
-                    console.log = this.fastConsoleLog;
-                    console.info = this.fastConsoleLog;
-                    console.warn = this.fastConsoleLog;
-                    console.error = this.fastConsoleLog;
-                    console.debug = this.fastConsoleLog;
+                    console.log = emptyFunction;
+                    console.info = emptyFunction;
+                    console.warn = emptyFunction;
+                    console.error = emptyFunction;
+                    console.debug = emptyFunction;
                     this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
                 }
 
                 onStop()
                 {
-                    console.log = this.slowConsoleLog;
-                    console.info = this.slowConsoleInfo;
-                    console.warn = this.slowConsoleWarn;
-                    console.error = this.slowConsoleError;
-                    console.debug = this.slowConsoleDebug;
+                    console.log = this.consoleLog;
+                    console.info = this.consoleInfo;
+                    console.warn = this.consoleWarn;
+                    console.error = this.consoleError;
+                    console.debug = this.consoleDebug;
                     clearInterval(this.antiSlowEventInterval);
                 }
             }
