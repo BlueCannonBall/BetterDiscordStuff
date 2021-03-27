@@ -8,13 +8,16 @@
 function censorTimestamps () {
     let all = document.getElementsByClassName("timestamp-3ZCmNB");
     for (idx in all) {
-        if (all[idx].textContent.includes('/') || all[idx].textContent.includes('Today at ') || all[idx].textContent.includes('Yesterday at ')) {
-            all[idx].style.color = "#202225";
-            all[idx].style.backgroundColor = "#202225";
-            all[idx].style['border-radius'] = "3px";
-        } else {
-            all[idx].style.color = "#00000000";
+        if (all[idx].textContent != undefined) {
+            if (all[idx].textContent.includes('/') || all[idx].textContent.includes('Today at ') || all[idx].textContent.includes('Yesterday at ')) {
+                all[idx].style.color = "#202225";
+                all[idx].style.backgroundColor = "#202225";
+                all[idx].style['border-radius'] = "3px";
+            } else {
+                all[idx].style.color = "#00000000";
+            }
         }
+        
     };
 }
     
@@ -33,7 +36,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "0.1.0",
+            version: "1.0.0",
             description: "Censors all timestamps unless hovered over.",
         }
     };
@@ -68,6 +71,33 @@ module.exports = (() =>
 
         const plugin = (Plugin, Api) =>
         {
+            const {
+                Toasts,
+                DiscordSelectors,
+                DiscordClasses,
+                PluginUpdater,
+                DiscordModules,
+                WebpackModules,
+                Tooltip,
+                Modals,
+                ReactTools,
+                ReactComponents,
+                ContextMenu,
+                Patcher,
+                Settings,
+                PluginUtilities,
+                DiscordAPI,
+                DOMTools,
+                DiscordClassModules
+            } = Api;
+
+            const {
+                MessageActions,
+                Dispatcher,
+                DiscordPermissions,
+                ChannelStore,
+                SimpleMarkdown
+            } = DiscordModules;
 
             return class AvatarIconViewer extends Plugin
             {
@@ -77,14 +107,47 @@ module.exports = (() =>
                     this.interval = null;
                 }
 
+                patch()
+                {
+                    Patcher.after(
+                        DiscordModules.MessageActions,
+                        "sendMessage",
+                        (thisObject, methodArguments, returnValue) => {
+                            let channel = DiscordAPI.currentChannel;
+                            returnValue.then((result) => {
+                                let isCurrentChannel = channel.messages.find((message) => {
+                                    return message.id == result.body.id;
+                                })
+                                if (isCurrentChannel) {
+                                    censorTimestamps();
+                                    console.log("Patched new message");
+                                }
+                            });
+                            censorTimestamps();
+                        }
+                    );
+                }
+
+                unpatch()
+                {
+                    Patcher.unpatchAll();
+                }
+
                 onStart()
                 {
+                    PluginUpdater.checkForUpdate(
+                        "CensorTimestamps",
+                        this.getVersion(),
+                        "https://raw.githubusercontent.com/BlueCannonBall/BetterDiscordStuff/main/plugins/CensorTimestamps/CensorTimestamps.plugin.js"
+                    );
                     this.interval = setInterval(censorTimestamps, 1500);
+                    this.patch();
                 }
 
                 onStop()
                 {
                     clearInterval(this.interval);
+                    this.unpatch();
                 }
             }
         };
