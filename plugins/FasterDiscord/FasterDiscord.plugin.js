@@ -67,12 +67,6 @@ module.exports = (() =>
 
                 onStart()
                 {
-                    PluginUpdater.checkForUpdate(
-                        "FasterDiscord",
-                        this.getVersion(),
-                        "https://raw.githubusercontent.com/BlueCannonBall/BetterDiscordStuff/main/plugins/FasterDiscord/FasterDiscord.plugin.js"
-                    );
-
                     console.log = this.fastConsoleLog;
                 }
 
