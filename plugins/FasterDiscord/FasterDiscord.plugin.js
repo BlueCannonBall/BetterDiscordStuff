@@ -4,7 +4,13 @@
  * @updateUrl https://raw.githubusercontent.com/BlueCannonBall/BetterDiscordStuff/main/plugins/FasterDiscord/FasterDiscord.plugin.js
  * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/FasterDiscord
  */
-    
+
+function antiSlowEvent () {
+    document.body.querySelectorAll('*').forEach(function(node) {
+        node.onmouseover = function (...args) { };
+    });
+}
+
 module.exports = (() =>
 {
     const config =
@@ -20,7 +26,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.1.0",
+            version: "1.1.1",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -66,8 +72,8 @@ module.exports = (() =>
                     this.slowConsoleWarn = console.warn;
                     this.slowConsoleError = console.error;
                     this.slowConsoleDebug = console.debug;
-
                     this.fastConsoleLog = function (...args) { };
+                    this.antiSlowEventInterval = null;
                 }
 
                 onStart()
@@ -78,6 +84,7 @@ module.exports = (() =>
                     console.warn = this.fastConsoleLog;
                     console.error = this.fastConsoleLog;
                     console.debug = this.fastConsoleLog;
+                    this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
                 }
 
                 onStop()
@@ -87,6 +94,7 @@ module.exports = (() =>
                     console.warn = this.slowConsoleWarn;
                     console.error = this.slowConsoleError;
                     console.debug = this.slowConsoleDebug;
+                    clearInterval(this.antiSlowEventInterval);
                 }
             }
         };
