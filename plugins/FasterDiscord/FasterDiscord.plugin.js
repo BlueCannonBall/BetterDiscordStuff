@@ -62,7 +62,7 @@ module.exports = (() =>
                 {
                     super();
                     this.slowConsoleLog = console.log;
-                    this.fastConsoleLog = function () { };
+                    this.fastConsoleLog = function (...args) { };
                 }
 
                 onStart()
