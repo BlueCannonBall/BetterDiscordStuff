@@ -7,6 +7,7 @@
 
 var emptyFunction = function () { };
 window._uuid = 0;
+window.ongoingTimeouts = {};
 
 function antiSlowEvent () {
     document.onmouseover = emptyFunction;
@@ -22,12 +23,9 @@ function antiSlowEvent () {
 function timeoutLoop () {
     let removedTimeouts = [];
     for (let timeout in ongoingTimeouts) {
-        if (ongoingTimeouts[timeout])
-        {
-            if (Date.now() >= ongoingTimeouts[timeout].time) {
-                ongoingTimeouts[timeout].func(ongoingTimeouts[timeout].args);
-                removedTimeouts.push(timeout);
-            }
+        if (Date.now() >= ongoingTimeouts[timeout].time) {
+            ongoingTimeouts[timeout].func(ongoingTimeouts[timeout].args);
+            removedTimeouts.push(timeout);
         }
     }
     for (let timeout in removedTimeouts) {
@@ -50,7 +48,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "2.1.0",
+            version: "2.1.1",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -103,7 +101,6 @@ module.exports = (() =>
                     this.badAddEventListenerDocument = document.addEventListener;
                     this.slowTimeout = window.setTimeout;
                     this.clearTimeout = window.clearTimeout;
-                    window.ongoingTimeouts = {};
                 }
 
                 onStart()
