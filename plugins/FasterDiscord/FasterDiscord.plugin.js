@@ -8,9 +8,12 @@
 var emptyFunction = function (...args) { };
 
 function antiSlowEvent () {
-    document.body.querySelectorAll('*').forEach(function(node) {
-        node.onmouseover = emptyFunction;
-    });
+    document.onmouseover = emptyFunction;
+    let all = document.body.getElementsByTagName("*");
+
+    for (var i=0, max=all.length; i < max; i++) {
+        all[i].onmouseover = emptyFunction;
+    }
 }
 
 module.exports = (() =>
@@ -28,7 +31,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.1.2",
+            version: "1.2.0",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -69,6 +72,7 @@ module.exports = (() =>
                 constructor()
                 {
                     super();
+
                     this.consoleLog = console.log;
                     this.consoleInfo = console.info;
                     this.consoleWarn = console.warn;
