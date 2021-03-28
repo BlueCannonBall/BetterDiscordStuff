@@ -11,7 +11,6 @@ window.ongoingTimeouts = {};
 
 function antiSlowEvent () {
     document.onmouseover = emptyFunction;
-    document.onpointerover = emptyFunction;
     let all = document.body.getElementsByTagName("*");
 
     for (var i=0, max=all.length; i < max; i++) {
@@ -48,7 +47,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "2.1.2",
+            version: "2.1.3",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -91,6 +90,7 @@ module.exports = (() =>
                     super();
 
                     this.consoleLog = console.log;
+                    window._consoleLog = this.consoleLog.bind(console);
                     this.consoleInfo = console.info;
                     this.consoleWarn = console.warn;
                     this.consoleError = console.error;
