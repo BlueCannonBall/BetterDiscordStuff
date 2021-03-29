@@ -5,7 +5,7 @@
  * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/FasterDiscord
  */
 
-const emptyFunction = function () { };
+var emptyFunction = function () { };
 window._uuid = 0;
 window.ongoingTimeouts = {};
 
@@ -47,7 +47,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "2.1.4",
+            version: "2.1.5",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
