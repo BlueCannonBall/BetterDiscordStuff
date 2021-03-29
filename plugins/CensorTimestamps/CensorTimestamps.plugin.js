@@ -8,7 +8,7 @@
 function censorTimestamps () {
     let all = document.getElementsByClassName("timestamp-3ZCmNB");
     for (idx in all) {
-        if (all[idx].textContent != undefined) {
+        if (all[idx].textContent != undefined && (all[idx].style.color != "#202225" || all[idx].style.color != "#00000000")) {
             if (all[idx].textContent.includes('/') || all[idx].textContent.includes('Today at ') || all[idx].textContent.includes('Yesterday at ')) {
                 all[idx].style.color = "#202225";
                 all[idx].style.backgroundColor = "#202225";
@@ -36,7 +36,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.0.0",
+            version: "1.0.1",
             description: "Censors all timestamps unless hovered over.",
         }
     };
