@@ -36,7 +36,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "1.0.1",
+            version: "1.0.2",
             description: "Censors all timestamps unless hovered over.",
         }
     };
@@ -120,7 +120,6 @@ module.exports = (() =>
                                 })
                                 if (isCurrentChannel) {
                                     censorTimestamps();
-                                    console.log("Patched new message");
                                 }
                             });
                             censorTimestamps();
