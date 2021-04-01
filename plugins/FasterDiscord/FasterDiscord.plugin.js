@@ -47,7 +47,7 @@ module.exports = (() =>
                     github_username: "BlueCannonBall",
                 }
             ],
-            version: "2.1.5",
+            version: "2.1.6",
             description: "Makes Discord feel faster and more responsive.",
         }
     };
@@ -96,7 +96,7 @@ module.exports = (() =>
                     this.consoleError = console.error;
                     this.consoleDebug = console.debug;
                     this.antiSlowEventInterval = null;
-                    this.timeoutLoopInterval = null;
+                    setInterval(timeoutLoop, 15);
                     this.badAddEventListener = window.addEventListener;
                     this.badAddEventListenerDocument = document.addEventListener;
                     this.slowTimeout = window.setTimeout;
@@ -112,7 +112,6 @@ module.exports = (() =>
                     console.error = emptyFunction;
                     console.debug = emptyFunction;
                     this.antiSlowEventInterval = setInterval(antiSlowEvent, 2000);
-                    this.timeoutLoopInterval = setInterval(timeoutLoop, 15);
                     window.setTimeout = (func, time, ...args) => {
                         let id = window._uuid++;
                         if (time < 0) {
@@ -150,7 +149,6 @@ module.exports = (() =>
                     window.setTimeout = this.slowTimeout;
                     window.clearTimeout = this.clearTimeout;
                     clearInterval(this.antiSlowEventInterval);
-                    clearInterval(this.timeoutLoopInterval);
                     window.addEventListener = this.badAddEventListener;
                     document.addEventListener = this.badAddEventListenerDocument;
                 }
