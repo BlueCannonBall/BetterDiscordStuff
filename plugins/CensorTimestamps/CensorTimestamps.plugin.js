@@ -5,7 +5,7 @@
  * @source https://github.com/BlueCannonBall/BetterDiscordStuff/tree/main/plugins/CensorTimestamps
  */
 
-function censorTimestamps () {
+function censorTimestamps() {
     let all = document.getElementsByClassName("timestamp-3ZCmNB");
     for (idx in all) {
         if (all[idx].textContent != undefined && (all[idx].style.color != "#202225" || all[idx].style.color != "#00000000")) {
@@ -21,43 +21,38 @@ function censorTimestamps () {
     };
 }
     
-module.exports = (() =>
-{
+module.exports = (() => {
     const config =
     {
         info:
         {
             name: "CensorTimestamps",
             authors:
-            [
-                {
-                    name: "BlueCannonBall",
-                    discord_id: "460508437160263683",
-                    github_username: "BlueCannonBall",
-                }
-            ],
-            version: "1.0.2",
+                [
+                    {
+                        name: "BlueCannonBall",
+                        discord_id: "852605214636638260",
+                        github_username: "BlueCannonBall",
+                    }
+                ],
+            version: "1.0.4",
             description: "Censors all timestamps unless hovered over.",
         }
     };
 
-    return !global.ZeresPluginLibrary ? class
-    {
+    return !global.ZeresPluginLibrary ? class {
         constructor() { this._config = config; }
 
         getName = () => config.info.name;
         getAuthor = () => config.info.description;
         getVersion = () => config.info.version;
 
-        load()
-        {
+        load() {
             BdApi.showConfirmationModal("Library Missing", `The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`, {
                 confirmText: "Download Now",
                 cancelText: "Cancel",
-                onConfirm: () =>
-                {
-                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (err, res, body) =>
-                    {
+                onConfirm: () => {
+                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (err, res, body) => {
                         if (err) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
                     });
@@ -65,12 +60,11 @@ module.exports = (() =>
             });
         }
 
-        start() { }
-        stop() { }
+        start() {}
+        stop() {}
     } : (([Plugin, Api]) => {
 
-        const plugin = (Plugin, Api) =>
-        {
+        const plugin = (Plugin, Api) => {
             const {
                 Toasts,
                 DiscordSelectors,
@@ -99,16 +93,13 @@ module.exports = (() =>
                 SimpleMarkdown
             } = DiscordModules;
 
-            return class CensorTimestamps extends Plugin
-            {
-                constructor()
-                {
+            return class CensorTimestamps extends Plugin {
+                constructor() {
                     super();
                     this.interval = null;
                 }
 
-                patch()
-                {
+                patch() {
                     Patcher.after(
                         DiscordModules.MessageActions,
                         "sendMessage",
@@ -127,13 +118,11 @@ module.exports = (() =>
                     );
                 }
 
-                unpatch()
-                {
+                unpatch() {
                     Patcher.unpatchAll();
                 }
 
-                onStart()
-                {
+                onStart() {
                     PluginUpdater.checkForUpdate(
                         "CensorTimestamps",
                         this.getVersion(),
@@ -143,8 +132,7 @@ module.exports = (() =>
                     this.patch();
                 }
 
-                onStop()
-                {
+                onStop() {
                     clearInterval(this.interval);
                     this.unpatch();
                 }
